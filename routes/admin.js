@@ -2,21 +2,24 @@ const path = require('path');
 
 const express = require('express');
 
-const rootDir = require('../utils/path');
+const adminController = require('../controllers/admin');
+const isAuth = require('../middleware/is-auth');
 
 const router = express.Router();
 
-const products = [];
+// /admin/add-product => GET
+router.get('/add-product', isAuth, adminController.getAddProduct);
 
-router.get('/add-product', (req, res, next) => {    
-    res.render('add-product', {docTitle: 'Add Product', path: '/admin/add-product'})
-});
-router.post('/add-product', (req, res, next) => {
-    console.log(req.body);
-    products.push({title: req.body.title});
-    res.redirect('/');
-});
+// /admin/products => GET
+router.get('/products', isAuth, adminController.getProducts);
 
-// module.exports = router;
-exports.routes = router;
-exports.products = products;
+// /admin/add-product => POST
+router.post('/add-product', isAuth, adminController.postAddProduct);
+
+router.get('/edit-product/:productId', isAuth, adminController.getEditProduct);
+
+router.post('/edit-product', isAuth, adminController.postEditProduct);
+
+router.post('/delete-product', isAuth, adminController.postDeleteProduct);
+
+module.exports = router;
