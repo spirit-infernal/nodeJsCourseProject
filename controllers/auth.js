@@ -10,7 +10,7 @@ const User = require('../models/user');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
   auth: {
-    api_key: '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'
+    api_key: ''
   }
 }
 ));
@@ -87,13 +87,7 @@ exports.postSignup = (req, res, next) => {
       errorMessage: errors.array()[0].msg
     });
   }
-  User.findOne({ email: email })
-    .then(userDoc => {
-      if (userDoc) {
-        req.flash('error', 'E-Mail exists already, please pick a different one.');
-        return res.redirect('/signup');
-      }
-      return bcrypt
+    bcrypt
         .hash(password, 12)
         .then(hashedPassword => {
           const user = new User({
@@ -118,11 +112,7 @@ exports.postSignup = (req, res, next) => {
           err => {
             console.log(err);
           }
-        );
-    })
-    .catch(err => {
-      console.log(err);
-    });
+        )
 };
 
 exports.postLogout = (req, res, next) => {
